@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Giải Cứu Chú Chuột Tí Tách - Tin Học Lớp 3</title>
+  <style>
+    :root {
+      --primary: #4F46E5;
+      --primary-hover: #4338CA;
+      --accent: #F59E0B;
+      --success: #10B981;
+      --danger: #EF4444;
+      --info: #06B6D4;
+      --bg-cream: #FFFBEB;
+      --card-bg: #FFFFFF;
+      --text-dark: #1E293B;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #6EE7B7 0%, #3B82F6 50%, #9333EA 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--text-dark);
+      padding: 12px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1050px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-radius: 28px;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+      border: 6px solid #FCD34D;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Tiêu đề & header */
+    .game-header {
+      background: linear-gradient(90deg, #F59E0B, #EF4444);
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      font-weight: 700;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .badge-info {
+      background: white;
+      color: #B45309;
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 800;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    .timer-badge {
+      background: #1E293B;
+      color: #38BDF8;
+      font-family: monospace;
+      font-size: 1.8rem;
+      padding: 6px 18px;
+      border-radius: 14px;
+      border: 3px solid #38BDF8;
+      letter-spacing: 2px;
+    }
+
+    /* Thanh chỉ dẫn nhiệm vụ nổi bật cho máy chiếu */
+    .task-banner {
+      background: #FEF3C7;
+      border-bottom: 3px dashed #F59E0B;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #92400E;
+    }
+
+    .task-badge-pill {
+      background: #D97706;
+      color: white;
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Biểu tượng thao tác chuột lớn cho máy chiếu */
+    .mouse-action-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #FFFBEB;
+      border: 3px solid #F59E0B;
+      padding: 6px 18px;
+      border-radius: 16px;
+      color: #B45309;
+      font-size: 1.35rem;
+      font-weight: 900;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.06);
+    }
+
+    .mouse-action-icon {
+      font-size: 1.8rem;
+    }
+
+    /* Khu vực màn hình bắt đầu */
+    .screen {
+      display: none;
+      padding: 24px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 560px;
+      text-align: center;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    /* Giao diện khởi động */
+    .hero-title {
+      font-size: 3rem;
+      color: #4338CA;
+      text-shadow: 2px 2px 0px #FDE047, 4px 4px 0px rgba(0,0,0,0.1);
+      margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+      font-size: 1.35rem;
+      color: #475569;
+      margin-bottom: 24px;
+      max-width: 750px;
+      line-height: 1.5;
+    }
+
+    .hero-avatar {
+      font-size: 5rem;
+      animation: float 2.5s ease-in-out infinite;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-14px) rotate(4deg); }
+    }
+
+    .team-input-card {
+      background: #EEF2FF;
+      border: 3px solid #818CF8;
+      padding: 20px 30px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .team-input {
+      font-size: 1.3rem;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: 3px solid #CBD5E1;
+      text-align: center;
+      font-weight: 700;
+      color: #1E293B;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .team-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+    }
+
+    .btn-action {
+      background: linear-gradient(180deg, #10B981, #059669);
+      color: white;
+      font-size: 1.7rem;
+      font-weight: 900;
+      padding: 16px 48px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4), inset 0 2px 2px rgba(255,255,255,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-action:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 24px rgba(16, 185, 129, 0.5);
+    }
+
+    .btn-action:active {
+      transform: translateY(2px);
+    }
+
+    /* Bảng kỹ năng ôn tập nhanh */
+    .skills-row {
+      display: flex;
+      gap: 14px;
+      margin-top: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .skill-chip {
+      background: #F1F5F9;
+      border: 2px solid #CBD5E1;
+      border-radius: 12px;
+      padding: 6px 14px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    /* Mê cung game SVG */
+    .maze-container {
+      width: 100%;
+      height: 520px;
+      position: relative;
+      background: #FEF9C3;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 4px solid #CA8A04;
+    }
+
+    svg.maze-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Các đối tượng trong SVG */
+    .wall {
+      fill: #F87171;
+      stroke: #DC2626;
+      stroke-width: 3;
+      rx: 12;
+      ry: 12;
+      transition: fill 0.2s;
+    }
+
+    .checkpoint-zone {
+      fill: #FEF08A;
+      stroke: #EAB308;
+      stroke-width: 3;
+      stroke-dasharray: 6 4;
+      rx: 16;
+    }
+
+    .goal-zone {
+      fill: #BBF7D0;
+      stroke: #16A34A;
+      stroke-width: 4;
+      rx: 18;
+    }
+
+    /* Trợ lý chuột & vật phẩm tương tác */
+    .interactive-element {
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    .interactive-element:hover {
+      filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.8));
+    }
+
+    /* Hộp câu hỏi bật lên (Modal câu đố nút chuột) */
+    .modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .quiz-card {
+      background: white;
+      border-radius: 24px;
+      padding: 28px 34px;
+      max-width: 620px;
+      width: 100%;
+      border: 6px solid #6366F1;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .quiz-question {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #1E293B;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 15px;
+    }
+
+    .quiz-btn {
+      background: #F8FAFC;
+      border: 3px solid #CBD5E1;
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .quiz-btn:hover {
+      background: #EEF2FF;
+      border-color: #6366F1;
+      color: #4F46E5;
+      transform: translateY(-2px);
+    }
+
+    /* Giấy khen chiến thắng */
+    .certificate-card {
+      background: #FFFDF5;
+      border: 10px double #B45309;
+      border-radius: 24px;
+      padding: 30px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      text-align: center;
+      position: relative;
+    }
+
+    .cert-seal {
+      width: 90px;
+      height: 90px;
+      background: #F59E0B;
+      border-radius: 50%;
+      border: 4px dashed #78350F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      position: absolute;
+      bottom: 25px;
+      right: 35px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .scoreboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 20px 0;
+      background: #FEF3C7;
+      padding: 16px;
+      border-radius: 14px;
+    }
+
+    .score-item-title {
+      font-size: 0.95rem;
+      color: #92400E;
+      font-weight: 700;
+    }
+
+    .score-item-val {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #B45309;
+    }
+
+    /* Hiệu ứng nổ pháo giấy ăn mừng */
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      opacity: 0.8;
+      border-radius: 2px;
+      animation: fall 3s linear infinite;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(600px) rotate(720deg); opacity: 0; }
+    }
+
+    /* Bảng thông báo popup nhỏ */
+    .toast-msg {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1E293B;
+      color: #FFF;
+      padding: 12px 28px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      z-index: 200;
+      display: none;
+      border: 3px solid #F59E0B;
+    }
+
+    /* Nút hướng dẫn phụ trợ */
+    .control-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: #F8FAFC;
+      border-top: 2px solid #E2E8F0;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #64748B;
+    }
+  </style>
+</head>
+<body>
+
+<div class="toast-msg" id="toastMsg">Thông báo!</div>
+
+<div class="container">
+  <!-- Header luôn hiển thị thông tin nhóm và đồng hồ -->
+  <header class="game-header">
+    <div class="badge-info">
+      <span>🚩</span>
+      <span id="displayTeamName">Chưa chọn nhóm</span>
+    </div>
+    <div class="badge-info" style="color: #4F46E5; border-color: #6366F1;">
+      <span>🐭 TÍ TÁCH</span>
+      <span id="playerActionState">Sẵn sàng</span>
+    </div>
+    <div class="timer-badge" id="timerText">00:00</div>
+  </header>
+
+  <!-- MÀN HÌNH 1: BẮT ĐẦU -->
+  <section class="screen active" id="startScreen">
+    <div class="hero-avatar">🐭✨💻</div>
+    <h1 class="hero-title">GIẢI CỨU CHÚ CHUỘT TÍ TÁCH</h1>
+    <p class="hero-subtitle">
+      Bài học: <b>Chuột máy tính (Tin học lớp 3)</b>.<br>
+      Hãy cùng đồng đội điều khiển chuột thật khéo léo vượt qua <b>mê cung công nghệ</b>,
+      thu thập chìa khóa, vượt chướng ngại vật để đưa Tí Tách về đích an toàn!
+    </p>
+
+    <div class="team-input-card">
+      <label for="teamNameInput" style="font-weight: 800; font-size: 1.15rem; color: #3730A3;">
+        Nhập tên Đội / Nhóm dự thi:
+      </label>
+      <input type="text" id="teamNameInput" class="team-input" value="Đội Sóc Nhanh Nhẹn" placeholder="Ví dụ: Nhóm 1, Đội Vàng..." maxlength="25">
+    </div>
+
+    <button class="btn-action" onclick="startGame()">▶ BẮT ĐẦU THI ĐẤU</button>
+
+    <div class="skills-row">
+      <div class="skill-chip">👉 Di chuyển chuột</div>
+      <div class="skill-chip">🖱️ Nhấp chuột trái</div>
+      <div class="skill-chip">⚡ Nhấp đúp chuột (Double click)</div>
+      <div class="skill-chip">🔄 Kéo thả chuột (Drag & Drop)</div>
+      <div class="skill-chip">⚙️ Nhấp chuột phải (Right Click)</div>
+    </div>
+  </section>
+
+  <!-- MÀN HÌNH 2: VÙNG MÊ CUNG THI ĐẤU -->
+  <section class="screen" id="gameScreen" style="padding: 10px;">
+    <div class="task-banner">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <span class="task-badge-pill" id="stageBadge">Trạm 1</span>
+        <div class="mouse-action-badge" id="currentActionIndicator">
+          <span class="mouse-action-icon" id="actionIcon">👉🖱️</span>
+          <span id="actionName">DI CHUYỂN CHUỘT</span>
+        </div>
+      </div>
+      <div style="font-size: 1.2rem; color: #DC2626; font-weight:800;" id="collisionCounter">
+        ⚠️ Chạm tường: 0 lần
+      </div>
+    </div>
+
+    <!-- Mê cung SVG 900x520 -->
+    <div class="maze-container" id="mazeWrapper">
+      <svg class="maze-canvas" viewBox="0 0 900 520" id="mazeSvg" preserveAspectRatio="xMidYMid meet">
+        <!-- Nền lưới toạ độ công nghệ trang trí -->
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(202, 138, 4, 0.15)" stroke-width="1.5" />
+          </pattern>
+          <radialGradient id="cheeseGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FEF08A" />
+            <stop offset="100%" stop-color="#EAB308" />
+          </radialGradient>
+        </defs>
+        
+        <rect width="900" height="520" fill="url(#grid)" />
+
+        <!-- Lối đi và các tường mê cung (Chướng ngại vật) -->
+        <g id="wallsGroup">
+          <!-- Tường biên bao quanh mê cung -->
+          <rect x="10" y="10" width="880" height="15" class="wall" />
+          <rect x="10" y="495" width="880" height="15" class="wall" />
+          <rect x="10" y="10" width="15" height="500" class="wall" />
+          <rect x="875" y="10" width="15" height="500" class="wall" />
+
+          <!-- Các khối tường tạo mê cung đường ngoằn ngoèo -->
+          <rect x="150" y="10" width="22" height="340" class="wall" />
+          <rect x="150" y="410" width="22" height="90" class="wall" />
+
+          <rect x="290" y="100" width="22" height="400" class="wall" />
+
+          <rect x="430" y="10" width="22" height="260" class="wall" />
+          <rect x="430" y="340" width="22" height="160" class="wall" />
+
+          <rect x="580" y="110" width="22" height="400" class="wall" />
+
+          <rect x="730" y="10" width="22" height="320" class="wall" />
+          <rect x="730" y="400" width="22" height="100" class="wall" />
+        </g>
+
+        <!-- Trạm 1: Điểm bắt đầu xuất phát -->
+        <g id="startZone">
+          <circle cx="75" cy="75" r="45" fill="#E0F2FE" stroke="#0284C7" stroke-width="3" stroke-dasharray="5 3"/>
+          <text x="75" y="80" text-anchor="middle" font-size="28">🚩</text>
+        </g>
+
+        <!-- Trạm 2: Hòm khóa cần NHẤP ĐÚP CHUỘT (Double-Click) -->
+        <g id="checkpointChest" class="interactive-element" transform="translate(220, 420)">
+          <rect x="-35" y="-35" width="70" height="70" class="checkpoint-zone" />
+          <text x="0" y="-42" text-anchor="middle" font-size="13" font-weight="900" fill="#B45309">⚡ 2x🖱️</text>
+          <!-- Rương kho báu -->
+          <text id="chestIcon" x="0" y="15" text-anchor="middle" font-size="38">🎁</text>
+        </g>
+
+        <!-- Trạm 3: Nút thần kỳ cần NHẤP CHUỘT PHẢI (Right-Click) -->
+        <g id="checkpointRightClick" class="interactive-element" transform="translate(360, 55)">
+          <rect x="-35" y="-35" width="70" height="70" class="checkpoint-zone" />
+          <text x="0" y="-42" text-anchor="middle" font-size="13" font-weight="900" fill="#B45309">👉🖱️ [Phải]</text>
+          <text id="shieldIcon" x="0" y="15" text-anchor="middle" font-size="38">🛡️</text>
+        </g>
+
+        <!-- Trạm 4: Thử thách KÉO THẢ (Drag & Drop Miếng Phô Mai vào đĩa) -->
+        <g id="checkpointDragDrop" transform="translate(505, 290)">
+          <rect x="-45" y="-45" width="90" height="90" class="checkpoint-zone" />
+          <text x="0" y="-52" text-anchor="middle" font-size="13" font-weight="900" fill="#B45309">🔄 KÉO THẢ</text>
+          <!-- Chiếc đĩa hứng phô mai -->
+          <circle id="dropTarget" cx="0" cy="15" r="28" fill="#F1F5F9" stroke="#64748B" stroke-width="3" stroke-dasharray="4 2"/>
+          <text x="0" y="20" text-anchor="middle" font-size="20">🍽️</text>
+        </g>
+
+        <!-- Miếng Phô mai có thể kéo thả (ở vị trí chờ) -->
+        <g id="draggableCheese" class="interactive-element" transform="translate(505, 430)">
+          <circle cx="0" cy="0" r="26" fill="url(#cheeseGlow)" stroke="#D97706" stroke-width="3"/>
+          <text x="0" y="9" text-anchor="middle" font-size="28">🧀</text>
+        </g>
+
+        <!-- Trạm 5: Cổng trắc nghiệm (Cần nhấp chuột trái) -->
+        <g id="checkpointQuiz" class="interactive-element" transform="translate(655, 60)">
+          <rect x="-35" y="-35" width="70" height="70" class="checkpoint-zone" />
+          <text x="0" y="-42" text-anchor="middle" font-size="13" font-weight="900" fill="#B45309">🖱️ [Trái]</text>
+          <text id="gateIcon" x="0" y="15" text-anchor="middle" font-size="38">❓</text>
+        </g>
+
+        <!-- VÙNG ĐÍCH ĐẾN: NGÔI NHÀ CÔNG NGHỆ -->
+        <g id="finishZone" class="interactive-element" transform="translate(810, 435)">
+          <rect x="-60" y="-55" width="120" height="110" class="goal-zone" />
+          <text x="0" y="-62" text-anchor="middle" font-size="15" font-weight="bold" fill="#15803D">🎉 ĐÍCH ĐẾN 🎉</text>
+          <text id="houseActionBadge" x="0" y="-38" text-anchor="middle" font-size="13" font-weight="900" fill="#B91C1C">⚡ NHẤP ĐÚP VÀO NHÀ</text>
+          <text id="houseIcon" x="0" y="22" text-anchor="middle" font-size="52">🏠</text>
+        </g>
+
+        <!-- NHÂN VẬT CHÍNH: CHÚ CHUỘT TÍ TÁCH (Di chuyển theo con trỏ chuột) -->
+        <g id="titachChar" transform="translate(75, 75)" style="pointer-events: none;">
+          <circle cx="0" cy="0" r="22" fill="#FFFFFF" stroke="#4F46E5" stroke-width="3" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.2))"/>
+          <text x="0" y="8" text-anchor="middle" font-size="28">🐭</text>
+          <circle cx="10" cy="-10" r="6" fill="#F43F5E" />
+          <circle cx="-10" cy="-10" r="6" fill="#F43F5E" />
+        </g>
+      </svg>
+    </div>
+
+    <div class="control-footer">
+      <div>🎯 <b>Thao tác hiển thị phía trên. Cố vấn cùng hỗ trợ đồng đội thực hiện chính xác!</b></div>
+      <button onclick="resetCurrentRun()" style="background:#EF4444; color:white; border:none; padding:6px 14px; border-radius:8px; cursor:pointer; font-weight:bold;">
+        🔄 Về điểm xuất phát
+      </button>
+    </div>
+  </section>
+
+  <!-- MODAL CÂU ĐỐ TIN HỌC TRẠM 5 -->
+  <div class="modal-overlay" id="quizModal">
+    <div class="quiz-card">
+      <div style="font-size: 3rem; margin-bottom: 8px;">🧠💡</div>
+      <h2 style="color: #4F46E5; margin-bottom: 12px;">CỬA THẦN KỲ - CÂU HỎI NHANH</h2>
+      <p class="quiz-question" id="quizQuestionText">Nút nào trên chuột thường được dùng để chọn biểu tượng hoặc thực hiện lệnh?</p>
+      <div class="quiz-options" id="quizOptionsContainer">
+        <!-- Tự động sinh qua JS -->
+      </div>
+      <p style="color: #64748B; font-size: 0.95rem;">Đội cố vấn hãy trợ giúp người cầm chuột chọn đáp án đúng nhé!</p>
+    </div>
+  </div>
+
+  <!-- MÀN HÌNH 3: BẢNG VINH DANH & CHỨNG NHẬN KĨ SƯ CHUỘT NHÍ -->
+  <section class="screen" id="endScreen">
+    <div id="confettiContainer"></div>
+    <div class="certificate-card">
+      <div class="cert-seal">🏅</div>
+      <h3 style="color: #D97706; letter-spacing: 2px; font-weight: 800; text-transform: uppercase;">TRƯỜNG TIỂU HỌC TƯƠNG LAI</h3>
+      <h1 style="font-size: 2.3rem; color: #1E293B; margin: 12px 0;">CHỨNG NHẬN KĨ SƯ CHUỘT NHÍ</h1>
+      <p style="font-size: 1.2rem; color: #475569;">Trao tặng danh hiệu xuất sắc cho tập thể:</p>
+      <h2 style="font-size: 2.4rem; color: #4F46E5; margin: 10px 0; text-decoration: underline;" id="certTeamName">Nhóm 1</h2>
+      <p style="font-size: 1.15rem; color: #334155; max-width: 620px; margin: 0 auto; line-height: 1.5;">
+        Đã xuất sắc hoàn thành xuất sắc các thao tác: <b>Di chuyển chuột, Nhấp chuột trái, Nhấp đúp chuột, Nhấp chuột phải và Kéo thả chuột</b> để giải cứu Tí Tách!
+      </p>
+
+      <div class="scoreboard">
+        <div>
+          <div class="score-item-title">THỜI GIAN VỀ ĐÍCH</div>
+          <div class="score-item-val" id="finalTime">00:00</div>
+        </div>
+        <div>
+          <div class="score-item-title">SỐ LẦN CHẠM TƯỜNG</div>
+          <div class="score-item-val" id="finalCollisions" style="color:#EF4444;">0</div>
+        </div>
+        <div>
+          <div class="score-item-title">XẾP HẠNG KỸ NĂNG</div>
+          <div class="score-item-val" id="finalRank" style="color:#10B981;">HẠNG A+</div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:center; gap: 15px; margin-top: 25px;">
+        <button class="btn-action" style="font-size: 1.25rem; padding: 12px 30px;" onclick="restartGame()">
+          🔄 LƯỢT CHƠI CHO NHÓM TIẾP THEO
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  /* Tắt toàn bộ âm thanh và giọng nói theo yêu cầu */
+  function playTone(freq, type = 'sine', duration = 0.15) {
+    // Không phát âm thanh
+  }
+
+  function soundSuccess() {
+    // Không phát âm thanh
+  }
+
+  function soundBonk() {
+    // Không phát âm thanh
+  }
+
+  function soundFanfare() {
+    // Không phát âm thanh
+  }
+
+  /* Hiển thị dòng chữ cảnh báo khi thao tác sai (thay thế cho âm thanh/giọng nói) */
+  let lastToastTime = 0;
+  function showWrongActionNotice(detail = "") {
+    const message = detail 
+      ? `Sai rồi! Bạn hãy làm lại thao tác: ${detail}!` 
+      : "Sai rồi! Bạn hãy làm lại thao tác!";
+    showToast(message, true);
+  }
+
+  /* Biến trạng thái trò chơi */
+  let teamName = "Đội Sóc Nhanh Nhẹn";
+  let timerInterval = null;
+  let secondsElapsed = 0;
+  let collisionCount = 0;
+  let gameRunning = false;
+  
+  let stageCompleted = {
+    c2_doubleClick: false,
+    c3_rightClick: false,
+    c4_dragDrop: false,
+    c5_quiz: false,
+    c6_houseUnlocked: false
+  };
+
+  let isDraggingCheese = false;
+
+  function setActionIndicator(icon, name) {
+    document.getElementById('actionIcon').innerText = icon;
+    document.getElementById('actionName').innerText = name;
+  }
+
+  function showScreen(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+  }
+
+  function showToast(msg, isError = false) {
+    const toast = document.getElementById('toastMsg');
+    toast.innerText = msg;
+    toast.style.background = isError ? "#DC2626" : "#1E293B";
+    toast.style.borderColor = isError ? "#FCA5A5" : "#F59E0B";
+    toast.style.display = 'block';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.style.display = 'none';
+    }, 2200);
+  }
+
+  function formatTime(totalSeconds) {
+    const mins = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const secs = (totalSeconds % 60).toString().padStart(2, '0');
+    return `${mins}:${secs}`;
+  }
+
+  function startTimer() {
+    secondsElapsed = 0;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      secondsElapsed++;
+      document.getElementById('timerText').innerText = formatTime(secondsElapsed);
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+  }
+
+  function startGame() {
+    const inputVal = document.getElementById('teamNameInput').value.trim();
+    teamName = inputVal ? inputVal : "Đội Vô Địch";
+    document.getElementById('displayTeamName').innerText = teamName;
+    document.getElementById('certTeamName').innerText = teamName;
+
+    collisionCount = 0;
+    stageCompleted = {
+      c2_doubleClick: false,
+      c3_rightClick: false,
+      c4_dragDrop: false,
+      c5_quiz: false,
+      c6_houseUnlocked: false
+    };
+
+    updateCollisionDisplay();
+    document.getElementById('stageBadge').innerText = "Trạm 1/5";
+    setActionIndicator("👉🖱️", "DI CHUYỂN CHUỘT");
+    document.getElementById('playerActionState').innerText = "Đang đi tìm đường";
+
+    // Khôi phục hình tượng các trạm
+    document.getElementById('chestIcon').innerText = "🎁";
+    document.getElementById('shieldIcon').innerText = "🛡️";
+    document.getElementById('gateIcon').innerText = "❓";
+    document.getElementById('houseIcon').innerText = "🏠";
+    document.getElementById('houseActionBadge').innerText = "⚡ NHẤP ĐÚP VÀO NHÀ";
+    
+    resetCheesePosition();
+
+    showScreen('gameScreen');
+    startTimer();
+    gameRunning = true;
+
+    setTitachPos(75, 75);
+  }
+
+  function updateCollisionDisplay() {
+    document.getElementById('collisionCounter').innerText = `⚠️ Chạm tường: ${collisionCount} lần`;
+  }
+
+  function resetCurrentRun() {
+    setTitachPos(75, 75);
+    showToast("Về điểm Xuất Phát");
+  }
+
+  const mazeSvg = document.getElementById('mazeSvg');
+  const titachChar = document.getElementById('titachChar');
+  const walls = document.querySelectorAll('.wall');
+
+  function setTitachPos(x, y) {
+    titachChar.setAttribute('transform', `translate(${x}, ${y})`);
+  }
+
+  function getSvgCoords(e) {
+    const pt = mazeSvg.createSVGPoint();
+    pt.x = e.clientX;
+    pt.y = e.clientY;
+    const globalPoint = pt.matrixTransform(mazeSvg.getScreenCTM().inverse());
+    return {
+      x: Math.max(15, Math.min(885, globalPoint.x)),
+      y: Math.max(15, Math.min(505, globalPoint.y))
+    };
+  }
+
+  // Lắng nghe di chuyển chuột trong mê cung
+  mazeSvg.addEventListener('mousemove', (e) => {
+    if (!gameRunning) return;
+
+    const coords = getSvgCoords(e);
+    setTitachPos(coords.x, coords.y);
+
+    if (isDraggingCheese) {
+      const cheese = document.getElementById('draggableCheese');
+      cheese.setAttribute('transform', `translate(${coords.x}, ${coords.y})`);
+    }
+
+    checkWallCollisions(coords.x, coords.y);
+  });
+
+  function checkWallCollisions(x, y) {
+    const radius = 16;
+    for (let wall of walls) {
+      const wx = parseFloat(wall.getAttribute('x'));
+      const wy = parseFloat(wall.getAttribute('y'));
+      const ww = parseFloat(wall.getAttribute('width'));
+      const wh = parseFloat(wall.getAttribute('height'));
+
+      if (x + radius > wx && x - radius < wx + ww &&
+          y + radius > wy && y - radius < wy + wh) {
+        onCollideWall();
+        break;
+      }
+    }
+  }
+
+  let lastCollisionTime = 0;
+  function onCollideWall() {
+    const now = Date.now();
+    if (now - lastCollisionTime > 900) {
+      lastCollisionTime = now;
+      collisionCount++;
+      updateCollisionDisplay();
+      showWrongActionNotice("di chuyển chuột tránh chạm tường");
+    }
+  }
+
+  // TRẠM 2: Nhấp đúp chuột vào Rương
+  const chestEl = document.getElementById('checkpointChest');
+  chestEl.addEventListener('dblclick', (e) => {
+    e.stopPropagation();
+    if (!stageCompleted.c2_doubleClick) {
+      stageCompleted.c2_doubleClick = true;
+      document.getElementById('chestIcon').innerText = "⭐";
+      document.getElementById('stageBadge').innerText = "Trạm 2/5 Xong";
+      setActionIndicator("🖱️ [Phải]", "NHẤP CHUỘT PHẢI");
+      showToast("✅ ĐÃ MỞ RƯƠNG THÀNH CÔNG!");
+    }
+  });
+
+  // Xử lý khi học sinh chỉ nhấp chuột đơn (thao tác sai)
+  chestEl.addEventListener('click', (e) => {
+    if (!stageCompleted.c2_doubleClick) {
+      showWrongActionNotice("nhấp đúp chuột liên tiếp 2 lần");
+    }
+  });
+
+  // TRẠM 3: Nhấp chuột phải vào Khiên
+  const rightClickEl = document.getElementById('checkpointRightClick');
+  rightClickEl.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!stageCompleted.c2_doubleClick) {
+      showWrongActionNotice("hoàn thành mở rương ở Trạm 2 trước");
+      return;
+    }
+
+    if (!stageCompleted.c3_rightClick) {
+      stageCompleted.c3_rightClick = true;
+      document.getElementById('shieldIcon').innerText = "✨";
+      document.getElementById('stageBadge').innerText = "Trạm 3/5 Xong";
+      setActionIndicator("🔄🖱️", "KÉO THẢ CHUỘT");
+      showToast("✅ ĐÃ KÍCH HOẠT KHIÊN THÀNH CÔNG!");
+    }
+  });
+
+  // Xử lý khi học sinh ấn nhầm chuột trái vào trạm 3 (thao tác sai)
+  rightClickEl.addEventListener('click', (e) => {
+    if (!stageCompleted.c3_rightClick) {
+      showWrongActionNotice("nhấp chuột phải");
+    }
+  });
+
+  const cheeseEl = document.getElementById('draggableCheese');
+  const dropTarget = document.getElementById('dropTarget');
+
+  function resetCheesePosition() {
+    isDraggingCheese = false;
+    cheeseEl.setAttribute('transform', 'translate(505, 430)');
+  }
+
+  cheeseEl.addEventListener('mousedown', (e) => {
+    if (!stageCompleted.c3_rightClick) {
+      showWrongActionNotice("kích hoạt trạm 3 trước");
+      return;
+    }
+    if (stageCompleted.c4_dragDrop) return;
+    
+    isDraggingCheese = true;
+  });
+
+  // Khi thả nút chuột (Mouse Up)
+  window.addEventListener('mouseup', (e) => {
+    if (!isDraggingCheese) return;
+    isDraggingCheese = false;
+
+    const coords = getSvgCoords(e);
+    const targetX = 505;
+    const targetY = 305;
+    const dist = Math.hypot(coords.x - targetX, coords.y - targetY);
+
+    if (dist < 45) {
+      stageCompleted.c4_dragDrop = true;
+      cheeseEl.setAttribute('transform', `translate(${targetX}, ${targetY})`);
+      document.getElementById('stageBadge').innerText = "Trạm 4/5 Xong";
+      setActionIndicator("🖱️ [Trái]", "NHẤP CHUỘT TRÁI");
+      showToast("✅ KÉO THẢ PHÔ MAI THÀNH CÔNG!");
+    } else {
+      resetCheesePosition();
+      showWrongActionNotice("kéo và thả phô mai đúng vào đĩa");
+    }
+  });
+
+  const quizGateEl = document.getElementById('checkpointQuiz');
+  const quizModal = document.getElementById('quizModal');
+  const quizQuestions = [
+    {
+      q: "Chuột máy tính thường có bao nhiêu nút cơ bản?",
+      options: ["1 nút bấm", "2 nút (Trái, Phải) & bánh lăn", "10 nút bấm", "Không có nút nào"],
+      correct: 1
+    },
+    {
+      q: "Ngón tay trỏ của bàn tay phải dùng để đặt lên nút nào của chuột?",
+      options: ["Bánh lăn", "Nút phải chuột", "Nút trái chuột", "Thân chuột"],
+      correct: 2
+    },
+    {
+      q: "Thao tác 'Nháy đúp chuột' là thao tác nào sau đây?",
+      options: ["Bấm nút phải chuột 1 lần", "Bấm nút trái 2 lần nhanh liên tiếp", "Kéo chuột thật nhanh", "Lăn bánh xe trên chuột"],
+      correct: 1
+    }
+  ];
+
+  let currentQuizIndex = 0;
+
+  quizGateEl.addEventListener('click', () => {
+    if (!stageCompleted.c4_dragDrop) {
+      showWrongActionNotice("kéo thả phô mai ở trạm trước");
+      return;
+    }
+    if (stageCompleted.c5_quiz) {
+      return;
+    }
+    openQuizModal();
+  });
+
+  function openQuizModal() {
+    currentQuizIndex = Math.floor(Math.random() * quizQuestions.length);
+    const quiz = quizQuestions[currentQuizIndex];
+    document.getElementById('quizQuestionText').innerText = quiz.q;
+
+    const optContainer = document.getElementById('quizOptionsContainer');
+    optContainer.innerHTML = '';
+
+    quiz.options.forEach((optText, idx) => {
+      const btn = document.createElement('button');
+      btn.className = 'quiz-btn';
+      btn.innerHTML = `<span style="font-size:1.4rem;">${['🅰️','🅱️','🅲','🅳'][idx]}</span> <span>${optText}</span>`;
+      btn.onclick = () => checkQuizAnswer(idx);
+      optContainer.appendChild(btn);
+    });
+
+    quizModal.classList.add('active');
+  }
+
+  function checkQuizAnswer(selectedIdx) {
+    const quiz = quizQuestions[currentQuizIndex];
+    if (selectedIdx === quiz.correct) {
+      stageCompleted.c5_quiz = true;
+      quizModal.classList.remove('active');
+      document.getElementById('gateIcon').innerText = "🟢";
+      document.getElementById('stageBadge').innerText = "Về Ngôi Nhà!";
+      setActionIndicator("⚡ 2x🖱️", "NHẤP ĐÚP VÀO NGÔI NHÀ");
+      showToast("✅ ĐÚNG RỒI! HÃY VỀ NGÔI NHÀ VÀ NHẤP ĐÚP CHUỘT!");
+    } else {
+      showWrongActionNotice("chọn đáp án đúng");
+    }
+  }
+
+  // TRẠM ĐÍCH ĐẾN: NGÔI NHÀ
+  const finishZone = document.getElementById('finishZone');
+
+  // Thao tác đúng: Nhấp đúp chuột vào ngôi nhà để mở cửa vào nhà
+  finishZone.addEventListener('dblclick', (e) => {
+    e.stopPropagation();
+    if (!stageCompleted.c5_quiz) {
+      showWrongActionNotice("vượt qua câu đố ở trạm 5 trước");
+      return;
+    }
+    finishGame();
+  });
+
+  // Khi học sinh chỉ nhấp chuột 1 lần (thao tác chưa đúng theo lời nhắc)
+  finishZone.addEventListener('click', (e) => {
+    if (!stageCompleted.c5_quiz) {
+      showWrongActionNotice("vượt qua trạm 5 trước khi về nhà");
+      return;
+    }
+    showWrongActionNotice("nhấp đúp chuột liên tiếp 2 lần vào Ngôi Nhà để mở cửa");
+  });
+
+  function finishGame() {
+    if (!gameRunning) return;
+    gameRunning = false;
+    stopTimer();
+
+    // Điền kết quả vào Chứng Nhận
+    document.getElementById('finalTime').innerText = formatTime(secondsElapsed);
+    document.getElementById('finalCollisions').innerText = collisionCount;
+    
+    // Tính hạng
+    let rank = "HẠNG XUẤT SẮC 🌟";
+    if (collisionCount === 0 && secondsElapsed < 45) {
+      rank = "KĨ SƯ BÀN TAY VÀNG 👑";
+    } else if (collisionCount <= 3) {
+      rank = "HẠNG A+ (RẤT TỐT) ⭐";
+    } else {
+      rank = "HẠNG TIÊN TIẾN 👍";
+    }
+    document.getElementById('finalRank').innerText = rank;
+
+    // Chuyển màn hình vinh danh
+    showScreen('endScreen');
+    triggerConfetti();
+  }
+
+  function triggerConfetti() {
+    const container = document.getElementById('confettiContainer');
+    container.innerHTML = '';
+    const colors = ['#F59E0B', '#EF4444', '#10B981', '#3B82F6', '#8B5CF6'];
+    for (let i = 0; i < 40; i++) {
+      const conf = document.createElement('div');
+      conf.className = 'confetti';
+      conf.style.left = Math.random() * 100 + '%';
+      conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      conf.style.animationDelay = Math.random() * 2 + 's';
+      conf.style.width = (Math.random() * 8 + 6) + 'px';
+      conf.style.height = (Math.random() * 8 + 6) + 'px';
+      container.appendChild(conf);
+    }
+  }
+
+  function restartGame() {
+    showScreen('startScreen');
+    document.getElementById('teamNameInput').value = "Đội " + (Math.floor(Math.random() * 4) + 1);
+    document.getElementById('displayTeamName').innerText = "Chưa chọn nhóm";
+    document.getElementById('timerText').innerText = "00:00";
+  }
+
+  // Khóa menu ngữ cảnh chuột phải trên toàn bộ trang để tránh bật menu khi nhấp lệch
+  document.addEventListener('contextmenu', (e) => {
+    // Chỉ cho phép hoạt động tại phần tử checkpoint 3
+    if (!e.target.closest('#checkpointRightClick')) {
+      e.preventDefault();
+    }
+  });
+</script>
+</body>
+</html>
